@@ -1,0 +1,26 @@
+name: Build Windows installer
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build (Docker)
+        run: |
+          docker build -f tools/installer-builder.Dockerfile -t armada-installer-builder tools
+          docker run --rm -v "${{ github.workspace }}:/src" -v "${{ github.workspace }}/artifacts:/work" armada-installer-builder python3 -B maintenance/build_installer.py --work-dir /work/build --output-dir /work/publish
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: FreedomInstaller-win-x64
+          path: artifacts/publish/
+      - name: Upload build record
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-record
+          path: artifacts/build/build-record.json
+          if-no-files-found: ignore
