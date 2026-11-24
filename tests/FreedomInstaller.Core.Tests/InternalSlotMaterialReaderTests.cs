@@ -1504,6 +1504,7 @@ public sealed class InternalSlotMaterialReaderTests
     [InlineData("6cfa16e65c2dadd0fc557dd356e6c383c693b4c3b7f0a651d92bb9f6e38b74a8", "ee165befc3fcac316f9c2ea0cd609207774ae5351af554a8706da29a7c90c0a4")]
     [InlineData("1cdc214a8f5cbd24878ccba205cf71c61be998696181d0933e3500113f326d72", "ee165befc3fcac316f9c2ea0cd609207774ae5351af554a8706da29a7c90c0a4")]
     [InlineData("1cdc214a8f5cbd24878ccba205cf71c61be998696181d0933e3500113f326d72", "388eb4d311993e9b314f058d11f1fb1b486ed2536090b086ea95ffbbc9ec9ce6")]
+    [InlineData("dcb879bbfde77519b131b87ab5d09c903a0d785cff70127d792244aa88b35ccb", "e763d921fbee00097d0428fa750c427cbe06135cff5cb36413884a7de3c42700")]
     public void Tb710fu_stock_495_loaders_get_the_same_window_budget(string ablSha, string xblSha)
     {
         // Lenovo's stock ZUXOS 1.5.04.495 ABL (replaced by the 279 ABL before an AOSP-signed boot runs) and its

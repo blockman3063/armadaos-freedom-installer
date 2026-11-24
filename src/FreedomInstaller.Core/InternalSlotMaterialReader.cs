@@ -170,8 +170,10 @@ public static class InternalSlotMaterialReader
     private const long KnownXblBytes = 352256;
     private const string KnownBAblSha256 = "811489f0cefb662bccf91a89d2b50187cc1e8fb949486421fe19f820981ecae0";
     private const string KnownBXblSha256 = "1a937da630c966372a67ba60d0103997f61ce7d1df086b7b6c68e4fcc0ba73c3";
-    // TB710FU (ZUXOS 1.5.04.495 loaders; A and B are identical). Its xbl_config also reserves the
-    // Kernel region memory@A8000000 / 0x10000000, so the same 256 MiB window arithmetic applies.
+    // TB710FU (ZUXOS 1.5.04.495 loaders; A and B are identical on the reviewed device, but some stock
+    // devices ship a different 495-generation ABL build in the B slot — see the second entry in each
+    // array below). Its xbl_config also reserves the Kernel region memory@A8000000 / 0x10000000, so
+    // the same 256 MiB window arithmetic applies.
     private const string Tb710fuProfile = "tb710fu-abl495-xbl-config-ramdisk-derived";
     private const long Tb710fuAblBytes = 1048576;
     private const long Tb710fuXblBytes = 245760;
@@ -183,16 +185,23 @@ public static class InternalSlotMaterialReader
     //  - xbl_config: the build the no-unlock chain shipped with, and Lenovo's stock ZUXOS 1.5.04.495 build. The two
     //    differ only in the signature block at the end (bytes 217761-218420); the configuration, Kernel region
     //    memory@A8000000 / 0x10000000 included, is byte-identical.
+    //  - Second entries (ABL dcb879bb…, xbl_config e763d921…): the A/B slots of a second stock ZUXOS 1.5.04.495
+    //    device (TB710FU, EDL serial 08ED5CBD). Its B slot carries a different 495-generation ABL build than the
+    //    reviewed device (246,661 differing bytes, Lenovo-signed stock build; byte sizes identical), while the B
+    //    xbl_config differs from the stock A one only in the same trailing signature region (bytes 217762-219684;
+    //    the configuration body is byte-identical), so the same window arithmetic applies to both slots.
     private static readonly string[] Tb710fuAblSha256 =
     {
         "6cfa16e65c2dadd0fc557dd356e6c383c693b4c3b7f0a651d92bb9f6e38b74a8",
         "1cdc214a8f5cbd24878ccba205cf71c61be998696181d0933e3500113f326d72",
+        "dcb879bbfde77519b131b87ab5d09c903a0d785cff70127d792244aa88b35ccb",
     };
 
     private static readonly string[] Tb710fuXblSha256 =
     {
         "388eb4d311993e9b314f058d11f1fb1b486ed2536090b086ea95ffbbc9ec9ce6",
         "ee165befc3fcac316f9c2ea0cd609207774ae5351af554a8706da29a7c90c0a4",
+        "e763d921fbee00097d0428fa750c427cbe06135cff5cb36413884a7de3c42700",
     };
     private const int KnownPage = 4096;
     private const int KnownV4Headers = 3;
