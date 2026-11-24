@@ -1,0 +1,23 @@
+name: Build edl-ng CLI (win-x64)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch AVB test key
+        run: |
+          curl --fail --silent --show-error --location 'https://android.googlesource.com/platform/external/avb/+/refs/heads/main/test/data/testkey_rsa4096.pem?format=TEXT' | base64 --decode > /tmp/testkey.pem
+      - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        with:
+          dotnet-version: '10.0.401'
+      - name: Publish QCEDL.CLI
+        run: dotnet publish tools/edl-ng/QCEDL.CLI -c Release -r win-x64 --self-contained true -p:BundledAvbSigningKey=/tmp/testkey.pem -o out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: qcedl-cli-win-x64
+          path: out/
