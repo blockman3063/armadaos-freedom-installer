@@ -1,6 +1,15 @@
 name: Build Windows installer
 on:
   workflow_dispatch:
+    inputs:
+      checkout_repo:
+        description: "Repository to checkout"
+        required: false
+        default: "ArmadaOS-Freedom/armadaos-freedom-installer"
+      checkout_ref:
+        description: "Ref (branch/sha/PR)"
+        required: false
+        default: "main"
 permissions:
   contents: read
 jobs:
@@ -8,7 +17,12 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 180
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout target
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.inputs.checkout_repo }}
+          ref: ${{ github.event.inputs.checkout_ref }}
+          persist-credentials: false
       - name: Build (Docker)
         run: |
           docker build -f tools/installer-builder.Dockerfile -t armada-installer-builder tools
